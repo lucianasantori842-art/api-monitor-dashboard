@@ -1,58 +1,82 @@
-# 🟢 API Monitor Dashboard
+# 🟢 API Monitor Dashboard v2
 
-A real-time API health monitoring dashboard built with vanilla HTML, CSS, and JavaScript. No dependencies, no build step — just open and run.
+Dashboard de monitoramento de APIs em tempo real com chamadas **reais** a APIs públicas. Backend Node.js + Express com frontend vanilla JS.
+
+## Demo
+
+Monitora 9 APIs públicas reais a cada 15 segundos:
+
+| API | URL |
+|-----|-----|
+| GitHub API | api.github.com |
+| PokeAPI | pokeapi.co |
+| JSONPlaceholder | jsonplaceholder.typicode.com |
+| Open Meteo | api.open-meteo.com |
+| CoinGecko | api.coingecko.com |
+| REST Countries | restcountries.com |
+| The Dog API | api.thedogapi.com |
+| Open Library | openlibrary.org |
+| IP API | ip-api.com |
 
 ## Features
 
-- **Live health checks** — simulates polling 9 microservices every 4 seconds
-- **Status indicators** — UP / SLOW / DOWN with animated dot indicators
-- **Sparkline charts** — latency history per endpoint drawn on `<canvas>`
-- **Uptime blocks** — last 20 checks visualized per service
-- **Event log** — real-time log of status changes with timestamps
-- **Summary bar** — global counts and average latency
-- **Responsive** — works on mobile and desktop
+- ✅ **Chamadas HTTP reais** — latência e status code verdadeiros
+- 📈 **Sparklines** — histórico de latência por endpoint (Canvas API)
+- 🟩 **Uptime blocks** — últimas 20 verificações visuais
+- 📋 **Event log** — log de mudanças de status com timestamp
+- ⚡ **Backend proxy** — evita CORS e centraliza as verificações
+- 📱 **Responsivo** — funciona em mobile e desktop
 
 ## Tech Stack
 
-- HTML5, CSS3 (custom properties, grid, animations)
-- Vanilla JavaScript (no frameworks)
-- Canvas API for sparklines
-- Google Fonts (Space Mono + Syne)
+- **Backend**: Node.js + Express + node-fetch
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript, Canvas API
+- **Fonts**: Space Mono + Syne (Google Fonts)
 
-## Getting Started
+## Como rodar
 
 ```bash
+# 1. Clone o repositório
 git clone https://github.com/lucianasantori842-art/api-monitor-dashboard.git
 cd api-monitor-dashboard
-# Open index.html in your browser — no server needed
-open index.html
+
+# 2. Instale as dependências
+npm install
+
+# 3. Inicie o servidor
+npm start
+
+# 4. Abra no navegador
+# http://localhost:3000
 ```
 
-## Connecting Real APIs
+## Estrutura
 
-In `app.js`, replace the `APIS` array with your real endpoints:
-
-```js
-const APIS = [
-  { id: 1, name: "My Auth API", url: "https://your-api.com/health" },
-  ...
-];
+```
+├── server.js          # Backend Express (proxy + health checks)
+├── package.json
+└── public/
+    ├── index.html     # Dashboard UI
+    ├── style.css      # Dark theme styles
+    └── app.js         # Frontend logic + sparklines
 ```
 
-Then replace `simulateCheck()` with a real `fetch()` call:
+## Adicionando suas próprias APIs
+
+Em `server.js`, adicione entradas no array `APIS`:
 
 ```js
-async function checkEndpoint(url) {
-  const t0 = performance.now();
-  try {
-    await fetch(url, { method: "GET", signal: AbortSignal.timeout(5000) });
-    const latency = Math.round(performance.now() - t0);
-    return { status: latency > 800 ? "slow" : "up", latency };
-  } catch {
-    return { status: "down", latency: null };
-  }
+{
+  id: 10,
+  name: "Minha API",
+  url: "https://minha-api.com/health",
+  description: "Descrição opcional"
 }
 ```
+
+## Deploy
+
+Compatível com **Railway**, **Render**, **Fly.io** e **Heroku** — só rodar `npm start`.
 
 ## License
 
